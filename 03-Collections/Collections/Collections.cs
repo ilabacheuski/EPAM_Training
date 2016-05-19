@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Collections.Tasks {
 
@@ -12,7 +13,6 @@ namespace Collections.Tasks {
         T Data { get; set; }                             // Custom data
         IEnumerable<ITreeNode<T>> Children { get; set; } // List of childrens
     }
-
 
     public class Task {
 
@@ -30,7 +30,19 @@ namespace Collections.Tasks {
         /// </example>
         public static IEnumerable<int> GetFibonacciSequence(int count) {
             // TODO : Implement Fibonacci sequence generator
-            throw new NotImplementedException();
+            if (count < 0) throw new ArgumentException(); // Is it right description of exception in conditions?
+            IList<int> List = new List<int>();
+
+            int a = 0, b = 1, tmp;
+            for (int i = 0; i < count; ++i)
+            {
+                tmp = a;
+                a = b;
+                b = tmp + b;
+                List.Add(a);
+            }
+            return List;
+            //throw new NotImplementedException();
         }
 
         /// <summary>
@@ -48,7 +60,37 @@ namespace Collections.Tasks {
         public static IEnumerable<string> Tokenize(TextReader reader) {
             char[] delimeters = new[] { ',', ' ', '.', '\t', '\n' };
             // TODO : Implement the tokenizer
-            throw new NotImplementedException();
+            if (reader == null) throw new ArgumentNullException("reader");
+
+            List<string> List = new List<string>();
+
+            StringBuilder str = new StringBuilder();
+
+            while(true)
+            {
+                int i = reader.Read();
+
+                if (i == -1) break;
+
+                char c = (char)i;
+
+                if (Array.IndexOf(delimeters, c) == -1)
+                {
+                    str.Append(c);
+                    continue;
+                }
+                if (str.Length > 0)
+                {
+                    List.Add(str.ToString());
+                    str.Clear();
+                }
+            }
+
+            if (str.Length > 0)
+                List.Add(str.ToString());
+
+            return List;
+            //throw new NotImplementedException();
         }
 
 
@@ -155,6 +197,5 @@ namespace Collections.Tasks {
             // TODO : Implement GetOrBuildValue method for cache
             throw new NotImplementedException();
         }
-
     }
 }
