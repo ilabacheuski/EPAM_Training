@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace Collections.Tasks {
@@ -118,7 +119,25 @@ namespace Collections.Tasks {
         /// </example>
         public static IEnumerable<T> DepthTraversalTree<T>(ITreeNode<T> root) {
             // TODO : Implement the tree depth traversal algorithm
-            throw new NotImplementedException(); 
+            if (root == null) throw new ArgumentNullException("root");
+
+            List<T> List = new List<T>();
+            Stack<ITreeNode<T>> stack = new Stack<ITreeNode<T>>();
+
+            stack.Push(root);
+
+            while (stack.Count != 0)
+            {
+                ITreeNode<T> currNode = stack.Pop();
+                List.Add(currNode.Data);
+
+                if (currNode.Children == null) continue;
+                foreach (var child in currNode.Children.Reverse()) // Not really good solution, bcs of buffering. Better implement Reverse iterator
+                {
+                    stack.Push(child);
+                }
+            }
+            return List;
         }
 
         /// <summary>
