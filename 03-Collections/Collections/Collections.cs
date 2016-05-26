@@ -163,7 +163,27 @@ namespace Collections.Tasks {
         /// </example>
         public static IEnumerable<T> WidthTraversalTree<T>(ITreeNode<T> root) {
             // TODO : Implement the tree width traversal algorithm
-            throw new NotImplementedException();
+
+            if (root == null) throw new ArgumentNullException("root");
+
+            List<T> List = new List<T>();
+            Queue<ITreeNode<T>> queue = new Queue<ITreeNode<T>>();
+            queue.Enqueue(root);
+
+            while (queue.Count != 0)
+            {
+                var currNode = queue.Dequeue();
+                List.Add(currNode.Data);
+
+                if (currNode.Children == null) continue;
+
+                foreach( var child in currNode.Children)
+                {
+                    queue.Enqueue(child);
+                }
+            }
+
+            return List;
         }
 
 
