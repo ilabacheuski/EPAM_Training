@@ -186,8 +186,6 @@ namespace Collections.Tasks {
             return List;
         }
 
-
-
         /// <summary>
         ///   Generates all permutations of specified length from source array
         /// </summary>
@@ -206,8 +204,97 @@ namespace Collections.Tasks {
         ///   source = { 1,2,3,4 }, count=5 => ArgumentOutOfRangeException
         /// </example>
         public static IEnumerable<T[]> GenerateAllPermutations<T>(T[] source, int count) {
+            /// Example with {1,2,3,4,5} would be better. It gives more variants of answers. Like count=3:
+            ///   source = { 1,2,3,4,5 }, count=1 => {{1},{2},{3},{4},{5}}
+            ///   source = { 1,2,3,4,5 }, count=2 => {{1,2},{1,3},{1,4},{1,5},{2,3},{2,4},{2,5},{3,4},{3,5},{4,5}}
+            ///   source = { 1,2,3,4,5 }, count=3 => {{1,2,3},{1,2,4},{1,2,5},{1,3,4},{1,3,5},{2,3,4},{2,3,5},{2,4,5},{3,4,5}}
+            ///   source = { 1,2,3,4,5,6,7 }, count=5 => {{1,2,3,4,5}, {1,2,3,4,6}, {1,2,3,4,7}, {1,2,3,5,6}, {1,2,3,5,7}, {1,2,3,6,7}, {1,2,4,5,6}, {1,2,4,5,7}, {1,2,4,6,7}, {1,2,4,5,6,7}
+            ///                                           {1,3,4,5,6,7},}
+            ///                                           {1,4,5,6,7,8} ... {1,4,5,8,9,12} {1,4,5,8,10,12} {1,4,5,8,9,12} {1,4,5,8,9,12}
+            ///   source = { 1,2,3,4,5,6,7 }, count=4 => {{1,2,3,4}, ..., {1,2,3,7}, {1,2,4,5}}
+            ///   source = { 1,2,3,4,5 }, count=5 => {{1,2,3,4,5}}
+
             // TODO : Implement GenerateAllPermutations method
-            throw new NotImplementedException();
+
+            if (count < 0 || count > source.Length) throw new ArgumentOutOfRangeException("count");
+
+            List<T[]> ResultList = new List<T[]>();
+
+            if (count==0)
+            {
+                return ResultList;
+            }
+
+            LinkedList<T> LinkedList = new LinkedList<T>(source);
+
+            //if (LinkedList.Count == 0) throw new ArgumentOutOfRangeException("LinkedList");
+
+            LinkedListNode<T>[] NodesArray = new LinkedListNode<T>[count];
+            var LengthNodesArray = NodesArray.Length;
+
+            //Fill initital list
+            var FillNode = LinkedList.First;
+            for (int i = 0; i < count; i++)
+            {
+                NodesArray[i] = FillNode;
+                FillNode = FillNode.Next;
+            }
+
+            int index = LengthNodesArray - 1;
+
+            LinkedListNode<T> CurrNode = NodesArray.Last();
+            LinkedListNode<T> NextNode = null;
+
+            LinkedListNode<T> ChkNode = LinkedList.Last;
+            for (int i = 1; i < count; i++)
+            {
+                ChkNode = ChkNode.Previous;
+            }
+
+            while (true)
+            {
+                ResultList.Add(NodesArray.Select(x => x.Value).ToArray());
+
+                //yield return NodesArray.Select(x => x.Value).ToArray();
+
+
+                if (index == 0 && CurrNode == ChkNode)
+                    break;
+
+                //Get index we must shift to next;
+                if (NodesArray[index].Next == NextNode)
+                {
+                    //Find Index
+                    while (index != -1 && NodesArray[index].Next == NextNode)
+                    {
+                        NextNode = NodesArray[index];
+                        --index;
+                    }
+
+                    //stop if the end
+                    if (index == -1)
+                        break;
+
+                    CurrNode = NodesArray[index].Next;
+                    NodesArray[index] = CurrNode;
+
+                    //Shift all till the end
+                    for (var k=index+1; k < LengthNodesArray; ++k)
+                    {
+                        CurrNode = CurrNode.Next;
+                        NodesArray[k] = CurrNode;
+                        ++index;
+
+                    }
+                    NextNode = null;
+                    continue;
+                }
+
+                CurrNode = CurrNode.Next;
+                NodesArray[index] = CurrNode;
+            }
+
+            return ResultList;
         }
 
     }
@@ -234,7 +321,17 @@ namespace Collections.Tasks {
         /// </example>
         public static TValue GetOrBuildValue<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TValue> builder) {
             // TODO : Implement GetOrBuildValue method for cache
-            throw new NotImplementedException();
+            if (dictionary.ContainsKey(key))
+            {
+                return dictionary[key];
+            }
+
+            var val_ = builder();
+
+            dictionary.Add(key, val_);
+
+            return val_;
+
         }
     }
 }
