@@ -22,7 +22,7 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<string> GetUppercaseStrings(IEnumerable<string> data) {
             // TODO : Implement GetUppercaseStrings
-            throw new NotImplementedException();
+            return data.Select(x=>x==null?null:x.ToUpper()).ToList();
         }
 
         /// <summary> Transforms an each string from sequence to its length</summary>
@@ -37,7 +37,7 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<int> GetStringsLength(IEnumerable<string> data) {
             // TODO : Implement GetStringsLength
-            throw new NotImplementedException();
+            return data.Select(x => x==null?0:x.Length).ToList();
         }
 
         /// <summary>Transforms int sequence to its square sequence, f(x) = x * x </summary>
@@ -52,7 +52,7 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<long> GetSquareSequence(IEnumerable<int> data) {
             // TODO : Implement GetSquareSequence
-            throw new NotImplementedException();
+            return data.Select(x => (long)x * (long)x).ToList();
         }
 
         /// <summary>Transforms int sequence to its moving sum sequence, 
@@ -72,7 +72,8 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<long> GetMovingSumSequence(IEnumerable<int> data) {
             // TODO : Implement GetMovingSumSequence
-            throw new NotImplementedException();
+            long sum=0;
+            return data.Select(x => (sum += x)).ToList();
         }
 
 
@@ -93,7 +94,11 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<string> GetPrefixItems(IEnumerable<string> data, string prefix) {
             // TODO : Implement GetPrefixItems
-            throw new NotImplementedException();
+            if (prefix==null)
+            {
+                throw new System.ArgumentNullException("prefix");
+            }
+            return data.Select(x => x).Where(x => x?.ToLower().IndexOf(prefix.ToLower())==0).ToList();//if data strings are big we can select just chars with length of prefix to avoid lowering all strings
         }
 
         /// <summary> Returns every second item from source sequence</summary>
