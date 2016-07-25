@@ -98,7 +98,7 @@ namespace EnumerableTask {
             {
                 throw new System.ArgumentNullException("prefix");
             }
-            return data.Select(x => x).Where(x => x?.ToLower().IndexOf(prefix.ToLower())==0).ToList();//if data strings are big we can select just chars with length of prefix to avoid lowering all strings
+            return data.Where(x => x?.ToLower().IndexOf(prefix.ToLower())==0).ToList();//if data strings are big we can select just chars with length of prefix to avoid lowering all strings
         }
 
         /// <summary> Returns every second item from source sequence</summary>
@@ -112,7 +112,17 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<T> GetEvenItems<T>(IEnumerable<T> data) {
             // TODO : Implement GetEvenItems
-            throw new NotImplementedException();
+            return data.Where((x,index) => index%2==1).ToList();
+        }
+
+        private IEnumerable<T> Propagate<T>(T Element, int capacity)
+        {
+            List<T> Result = new List<T>(capacity+1);
+            for (int i = 0; i <= capacity; i++)
+            {
+                Result.Add(Element);
+            }
+            return Result;
         }
 
         /// <summary> Propagate every item in sequence its position times</summary>
@@ -130,7 +140,8 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<T> PropagateItemsByPositionIndex<T>(IEnumerable<T> data) {
             // TODO : Implement PropagateItemsByPositionIndex
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return data.SelectMany((x, i) => Propagate(x, i)).ToList();
         }
 
         /// <summary>Finds all used char in string sequence</summary>
@@ -147,7 +158,8 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<char> GetUsedChars(IEnumerable<string> data) {
             // TODO : Implement GetUsedChars
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return data.Select(x=>x).Where(x=>!string.IsNullOrEmpty(x)).SelectMany(x => x.ToArray()).Distinct().ToList();
         }
 
 
@@ -165,7 +177,8 @@ namespace EnumerableTask {
         /// </example>
         public string GetStringOfSequence<T>(IEnumerable<T> data) {
             // TODO : Implement GetStringOfSequence
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return data.Count()==0? "" : data.Select(x=>x==null?"null":x.ToString()).Aggregate((i, j) => i+","+j).ToString();
         }
 
         /// <summary> Finds the 3 largest numbers from a sequence</summary>
