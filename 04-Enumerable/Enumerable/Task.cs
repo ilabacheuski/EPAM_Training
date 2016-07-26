@@ -178,7 +178,8 @@ namespace EnumerableTask {
         public string GetStringOfSequence<T>(IEnumerable<T> data) {
             // TODO : Implement GetStringOfSequence
             //throw new NotImplementedException();
-            return data.Count()==0? "" : data.Select(x=>x==null?"null":x.ToString()).Aggregate((i, j) => i+","+j).ToString();
+            
+            return string.Join(",", data.Select(x => x == null ? "null" : x.ToString())); //data.Count()==0? "" : data.Select(x=>x==null?"null":x.ToString()).Aggregate((i, j) => i+","+j).ToString();
         }
 
         /// <summary> Finds the 3 largest numbers from a sequence</summary>
