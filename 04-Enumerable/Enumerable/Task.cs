@@ -277,7 +277,7 @@ namespace EnumerableTask {
         /// </example>
         public int GetCountOfStringsWithMaxLength(IEnumerable<string> data) {
             // TODO : Implement GetCountOfStringsWithMaxLength
-            throw new NotImplementedException();
+            return data.GroupBy(x => x == null ? 0 : x.Length).OrderByDescending(g => g.Key).Select(g => g.Count()).FirstOrDefault();// data.GroupBy(x => x == null ? 0 : x.Length).OrderByDescending(g => g.Key).FirstOrDefault().Count();
         }
 
 
