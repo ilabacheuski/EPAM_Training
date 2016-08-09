@@ -297,7 +297,7 @@ namespace EnumerableTask {
         /// </example>
         public int GetDigitCharsCount(string data) {
             // TODO : Implement GetDigitCharsCount
-            throw new NotImplementedException();
+            return data.Count(x => Char.IsDigit(x));
         }
 
 
