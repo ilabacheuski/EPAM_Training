@@ -329,7 +329,14 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<string> GetIEnumerableTypesNames(Assembly assembly) {
             // TODO : Implement GetIEnumerableTypesNames
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            if (assembly==null)
+            {
+                throw new ArgumentNullException("assembly");
+            }
+
+            return assembly.GetExportedTypes().Where(type => type.GetInterface("IEnumerable") != null).Select(type=>type.Name).Distinct().OrderBy(x=>x).ToList();
+
         }
 
         /// <summary>Calculates sales sum by quarter</summary>
@@ -346,6 +353,14 @@ namespace EnumerableTask {
         public int[] GetQuarterSales(IEnumerable<Tuple<DateTime, int>> sales) {
             // TODO : Implement GetQuarterSales
             throw new NotImplementedException();
+            //int[] year = new int[4] { 0, 0, 0, 0 };
+            //year.GroupJoin(sales.GroupBy(item => ((item.Item1.Date.Month - 1) / 3)).Select(x => new { Quarter = x.Key, Sum = x.Sum(item => item.Item2) }),
+            //    sale => sale.Quarter,
+            //    (quarter,i) => i,
+            //    )
+            //return sales.GroupBy(item => ((item.Item1.Date.Month - 1) / 3)).Select(x => new { Quarter = x.Key, Sum = x.Sum(item => item.Item2) })
+
+
         }
 
 
