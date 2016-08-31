@@ -394,7 +394,7 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<char> GetMissingDigits(IEnumerable<string> data) {
             // TODO : Implement GetMissingDigits
-            throw new NotImplementedException();
+            return "0123456789".Except(data.SelectMany(i => i.ToArray()).Distinct()).ToList();
         }
 
 
