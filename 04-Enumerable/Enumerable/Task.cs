@@ -364,19 +364,6 @@ namespace EnumerableTask {
                           from sale in grouping.DefaultIfEmpty()
                           select new { Quarter = quarter, Sum = sale?.Sum ?? 0 }).ToList().Select(x=>x.Sum).ToArray();
             return result;
-
-            //int[] year = new int[4] { 0, 0, 0, 0 };
-            //var template = year.Select((x, i) => new { Quarter = i, Sum = x }).ToList();
-            //var data = sales.GroupBy(item => ((item.Item1.Date.Month - 1) / 3)).Select(x => new { Quarter = x.Key, Sum = x.Sum(item => item.Item2) }).ToLookup(x=>x.Quarter, el=>el.Sum);
-            //return Enumerable.Range(0, 4).Select(x => new { Quarter = x, Sum = data[x]. }).Select(x => x.Sum).ToArray();
-            ////return template.Join(data, t => t.Quarter, d => d.Quarter, (item1, item2) => item2.Sum).ToArray();
-            ////year.GroupJoin(sales.GroupBy(item => ((item.Item1.Date.Month - 1) / 3)).Select(x => new { Quarter = x.Key, Sum = x.Sum(item => item.Item2) }),
-            ////    sale => sale.Quarter,
-            ////    (quarter, i) => i,
-            ////    )
-            ////return sales.GroupBy(item => ((item.Item1.Date.Month - 1) / 3)).Select(x => new { Quarter = x.Key, Sum = x.Sum(item => item.Item2) })
-
-
         }
 
 
@@ -392,7 +379,7 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<string> SortStringsByLengthAndAlphabet(IEnumerable<string> data) {
             // TODO : Implement SortStringsByLengthAndAlphabet
-            throw new NotImplementedException();
+            return data.OrderBy(st => st.Length).ThenBy(st => st).ToList();
         }
 
         /// <summary> Finds all missing digits </summary>
