@@ -352,13 +352,29 @@ namespace EnumerableTask {
         /// </example>
         public int[] GetQuarterSales(IEnumerable<Tuple<DateTime, int>> sales) {
             // TODO : Implement GetQuarterSales
-            throw new NotImplementedException();
+
+            var groupedSales = sales.GroupBy(item => ((item.Item1.Month - 1) / 3))
+                        .Select(x => new {
+                            Quarter = x.Key,
+                            Sum = x.Sum(item => item.Item2)
+                        });
+
+            var result = (from quarter in Enumerable.Range(0, 4)
+                          join sale in groupedSales on quarter equals sale.Quarter into grouping
+                          from sale in grouping.DefaultIfEmpty()
+                          select new { Quarter = quarter, Sum = sale?.Sum ?? 0 }).ToList().Select(x=>x.Sum).ToArray();
+            return result;
+
             //int[] year = new int[4] { 0, 0, 0, 0 };
-            //year.GroupJoin(sales.GroupBy(item => ((item.Item1.Date.Month - 1) / 3)).Select(x => new { Quarter = x.Key, Sum = x.Sum(item => item.Item2) }),
-            //    sale => sale.Quarter,
-            //    (quarter,i) => i,
-            //    )
-            //return sales.GroupBy(item => ((item.Item1.Date.Month - 1) / 3)).Select(x => new { Quarter = x.Key, Sum = x.Sum(item => item.Item2) })
+            //var template = year.Select((x, i) => new { Quarter = i, Sum = x }).ToList();
+            //var data = sales.GroupBy(item => ((item.Item1.Date.Month - 1) / 3)).Select(x => new { Quarter = x.Key, Sum = x.Sum(item => item.Item2) }).ToLookup(x=>x.Quarter, el=>el.Sum);
+            //return Enumerable.Range(0, 4).Select(x => new { Quarter = x, Sum = data[x]. }).Select(x => x.Sum).ToArray();
+            ////return template.Join(data, t => t.Quarter, d => d.Quarter, (item1, item2) => item2.Sum).ToArray();
+            ////year.GroupJoin(sales.GroupBy(item => ((item.Item1.Date.Month - 1) / 3)).Select(x => new { Quarter = x.Key, Sum = x.Sum(item => item.Item2) }),
+            ////    sale => sale.Quarter,
+            ////    (quarter, i) => i,
+            ////    )
+            ////return sales.GroupBy(item => ((item.Item1.Date.Month - 1) / 3)).Select(x => new { Quarter = x.Key, Sum = x.Sum(item => item.Item2) })
 
 
         }
