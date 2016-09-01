@@ -479,7 +479,7 @@ namespace EnumerableTask {
         /// </example>
         public int GetSumOfAllInts(object[] data) {
             // TODO : Implement GetSumOfAllInts
-            throw new NotImplementedException();
+            return data.Where(d => d.GetType() == typeof(int)).Cast<int>().Sum();
         }
 
 
