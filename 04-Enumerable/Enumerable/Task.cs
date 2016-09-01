@@ -412,7 +412,8 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<string> SortDigitNamesByNumericOrder(IEnumerable<string> data) {
             // TODO : Implement SortDigitNamesByNumericOrder
-            throw new NotImplementedException();
+            string[] dict = new string[10] { "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine" };
+            return data.OrderBy(k => Array.IndexOf(dict, k)).ToList();
         }
 
         /// <summary> Combines numbers and fruits </summary>
