@@ -8,6 +8,20 @@ using System.Diagnostics;
 
 namespace EnumerableTask {
 
+    public static class CustomSequenceOperators
+    {
+        public static IEnumerable<S> Combine<S>(this IEnumerable<string> first, IEnumerable<string> second, System.Func<string, string, S> func)
+        {
+            using (IEnumerator<string> e1 = first.GetEnumerator(), e2 = second.GetEnumerator())
+            {
+                while (e1.MoveNext() && e2.MoveNext())
+                {
+                    yield return func(e1.Current, e2.Current);
+                }
+            }
+        }
+    }
+
     public class Task {
 
         /// <summary> Transforms all strings to uppercase</summary>
@@ -431,7 +445,7 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<string> CombineNumbersAndFruits(IEnumerable<string> numbers, IEnumerable<string> fruits) {
             // TODO : Implement CombinesNumbersAndFruits
-            throw new NotImplementedException();
+            return numbers.Combine(fruits, (a, b) => a + " " + b).ToList();
         }
 
 
@@ -448,7 +462,8 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<char> GetCommonChars(IEnumerable<string> data) {
             // TODO : Implement GetCommonChars
-            throw new NotImplementedException();
+            var length = data.Count();
+            return data.SelectMany(d => d.ToArray().Distinct()).GroupBy(x => x).Where(d => d.Count() == length).Select(x =>x.Key).ToList();
         }
 
         /// <summary> Calculates sum of all integers from object array </summary>
