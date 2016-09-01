@@ -496,7 +496,7 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<string> GetStringsOnly(object[] data) {
             // TODO : Implement GetStringsOnly
-            throw new NotImplementedException();
+            return data.Where(d => d?.GetType() == typeof(string)).Cast<string>().ToList();
         }
 
         /// <summary> Calculates the total length of strings</summary>
