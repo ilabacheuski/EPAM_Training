@@ -161,7 +161,18 @@ namespace LinqToXml
         /// </example>
         public static string GetFlattenString(XElement xmlRepresentation)
         {
-            throw new NotImplementedException();
+            var descendants = xmlRepresentation.Descendants().ToList();
+
+            // So we need to strip child elements from everywhere...
+            // (but only elements, not text nodes). The ToList() call
+            // materializes the query, so we're not removing while we're iterating.
+            foreach (var nested in descendants.Elements().ToList())
+            {
+                nested.Remove();
+            }
+            xmlRepresentation.ReplaceNodes(descendants); //FLATTENING
+
+            return xmlRepresentation.ToString(SaveOptions.DisableFormatting); //JUST REMOVE WHITESPACES!
         }
 
         /// <summary>
