@@ -16,7 +16,21 @@ namespace LinqToXml
         /// <returns>Xml representation (refer to CreateHierarchyResultFile.xml in Resources)</returns>
         public static string CreateHierarchy(string xmlRepresentation)
         {
-            throw new NotImplementedException();
+            XDocument doc = XDocument.Parse(xmlRepresentation);
+            var newdata =
+                new XElement("Root",
+                    from data in doc.Root.Elements("Data")
+                    group data by (string)data.Element("Category") into groupedData
+                    select new XElement("Group",
+                        new XAttribute("ID", groupedData.Key),
+                        from g in groupedData
+                        select new XElement("Data",
+                            g.Element("Quantity"),
+                            g.Element("Price")
+                        )
+                    )
+                );
+            return newdata.ToString();
         }
 
         /// <summary>
