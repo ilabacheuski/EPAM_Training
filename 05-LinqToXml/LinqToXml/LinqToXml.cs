@@ -16,10 +16,10 @@ namespace LinqToXml
         /// <returns>Xml representation (refer to CreateHierarchyResultFile.xml in Resources)</returns>
         public static string CreateHierarchy(string xmlRepresentation)
         {
-            XDocument doc = XDocument.Parse(xmlRepresentation);
+            XElement doc = XElement.Parse(xmlRepresentation);
             var newdata =
                 new XElement("Root",
-                    from data in doc.Root.Elements("Data")
+                    from data in doc.Elements("Data")
                     group data by (string)data.Element("Category") into groupedData
                     select new XElement("Group",
                         new XAttribute("ID", groupedData.Key),
@@ -43,7 +43,19 @@ namespace LinqToXml
         /// </example>
         public static string GetPurchaseOrders(string xmlRepresentation)
         {
-            throw new NotImplementedException();
+            XElement doc = XElement.Parse(xmlRepresentation);
+            XNamespace aw = "http://www.adventure-works.com";
+            var purchases =
+                (from data in doc.Elements(aw + "PurchaseOrder")
+                 where
+                     (from addr in data.Elements(aw + "Address")
+                      where
+                         (string)addr.Attribute(aw + "Type") == "Shipping" &&
+                         (string)addr.Element(aw + "State") == "NY"
+                      select addr)
+                     .Any()
+                 select (string) data.Attribute(aw + "PurchaseOrderNumber"));
+            return String.Join(",", purchases.ToArray());
         }
 
         /// <summary>
@@ -53,7 +65,26 @@ namespace LinqToXml
         /// <returns>Xml customers representation (refer to XmlFromCsvResultFile.xml in Resources)</returns>
         public static string ReadCustomersFromCsv(string customers)
         {
-            throw new NotImplementedException();
+            string[] source = customers.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            XElement cust = new XElement("Root",
+                from str in source
+                let fields = str.Split(',')
+                select new XElement("Customer", 
+                    new XAttribute("CustomerID",    fields[0]),
+                    new XElement("CompanyName",     fields[1]),
+                    new XElement("ContactName",     fields[2]),
+                    new XElement("ContactTitle",    fields[3]),
+                    new XElement("Phone",           fields[4]),
+                    new XElement("FullAddress",
+                        new XElement("Address",     fields[5]),
+                        new XElement("City",        fields[6]),
+                        new XElement("Region",      fields[7]),
+                        new XElement("PostalCode",  fields[8]),
+                        new XElement("Country",     fields[9])
+                        )
+                    )
+                );
+            return cust.ToString();
         }
 
         /// <summary>
