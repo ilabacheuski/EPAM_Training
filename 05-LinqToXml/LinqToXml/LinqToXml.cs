@@ -94,7 +94,11 @@ namespace LinqToXml
         /// <returns>Concatenation of all this element values.</returns>
         public static string GetConcatenationString(string xmlRepresentation)
         {
-            throw new NotImplementedException();
+            XElement doc = XElement.Parse(xmlRepresentation);
+            var res =
+                from str in doc.Elements()
+                select str.Value;
+            return res.Aggregate(new StringBuilder(), (sb, el) => sb.Append(el), r=>r.ToString());
         }
 
         /// <summary>
