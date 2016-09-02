@@ -547,7 +547,7 @@ namespace EnumerableTask {
         /// </example>
         public bool IsAllStringsAreUppercase(IEnumerable<string> data) {
             // TODO : Implement IsAllStringsAreUppercase
-            return data.Count() == 0 ? false : data.All(x => x?.Length != 0 && x.All(ch => Char.IsUpper(ch)));
+            return data.Count() == 0 ? false : data.All(x => (x?.Length != 0) && x.All(ch => Char.IsUpper(ch)));
         }
 
         /// <summary> Finds first subsequence of negative integers </summary>
@@ -565,7 +565,7 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<int> GetFirstNegativeSubsequence(IEnumerable<int> data) {
             // TODO : Implement GetFirstNegativeSubsequence
-            throw new NotImplementedException();
+            return data.SkipWhile(x => x >= 0).TakeWhile(x => x < 0).ToList();
         }
 
 
