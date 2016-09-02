@@ -124,7 +124,14 @@ namespace LinqToXml
         /// <returns>Sequence of channels ids</returns>
         public static IEnumerable<int> FindChannelsIds(string xmlRepresentation)
         {
-            throw new NotImplementedException();
+            XElement doc = XElement.Parse(xmlRepresentation);
+            var res =
+                from el in doc.Elements("channel")
+                where
+                    el.Elements("subscriber").Count() > 1 &&
+                    el.Nodes().OfType<XComment>().Any(com=>com.Value == @"DELETE")
+                select (int)el.Attribute("id");
+            return res.ToList();
         }
 
         /// <summary>
@@ -134,7 +141,14 @@ namespace LinqToXml
         /// <returns>Sorted customers representation (refer to GeneralCustomersResultFile.xml in Resources)</returns>
         public static string SortCustomers(string xmlRepresentation)
         {
-            throw new NotImplementedException();
+            XElement doc = XElement.Parse(xmlRepresentation);
+            XElement newCustord =
+                new XElement("Root",
+                from cust in doc.Elements("Customers")
+                orderby (string)cust.Element("FullAddress").Element("Country"), (string)cust.Element("FullAddress").Element("City")
+                select cust
+                );
+            return newCustord.ToString();
         }
 
         /// <summary>
