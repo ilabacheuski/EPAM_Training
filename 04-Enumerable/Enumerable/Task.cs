@@ -618,7 +618,7 @@ namespace EnumerableTask {
         /// </example>
         public string GetNextVersionFromList(IEnumerable<string> versions, string currentVersion) {
             // TODO : Implement GetNextVersionFromList
-            throw new NotImplementedException();
+            return versions.SkipWhile(v => v != currentVersion).Skip(1).FirstOrDefault();
         }
 
         /// <summary>
