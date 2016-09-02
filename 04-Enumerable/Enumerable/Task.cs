@@ -675,7 +675,7 @@ namespace EnumerableTask {
         /// </example>
         public IEnumerable<string> GetAllPairs(IEnumerable<string> boys, IEnumerable<string> girls) {
             // TODO : Implement GetAllPairs
-            throw new NotImplementedException();
+            return boys.Select(b => girls.Select(g => b + "+" + g)).SelectMany(p=>p);
         }
 
 
