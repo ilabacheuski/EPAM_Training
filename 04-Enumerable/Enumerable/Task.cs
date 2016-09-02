@@ -20,6 +20,20 @@ namespace EnumerableTask {
                 }
             }
         }
+
+        public static bool Comparator(this IEnumerable<int> first, IEnumerable<double> second)
+        {
+            using (IEnumerator<int> e1 = first.GetEnumerator())
+            using (IEnumerator<double> e2 = second.GetEnumerator())
+            {
+                while (e1.MoveNext() && e2.MoveNext())
+                {
+                    if (e1.Current != e2.Current) return
+                            false;
+                }
+            }
+            return true;
+        }
     }
 
     public class Task {
@@ -585,7 +599,7 @@ namespace EnumerableTask {
         /// </example>
         public bool AreNumericListsEqual(IEnumerable<int> integers, IEnumerable<double> doubles) {
             // TODO : Implement AreNumericListsEqual
-            throw new NotImplementedException();
+            return integers.Comparator(doubles);
         }
 
         /// <summary>
