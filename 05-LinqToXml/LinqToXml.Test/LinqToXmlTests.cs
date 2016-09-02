@@ -64,7 +64,7 @@ namespace LinqToXml.Test
         public void GetFlattenStringTest()
         {
             var doc = XElement.Parse(LinqToXmlResources.GeneralOrdersFileSource);
-            Assert.AreEqual("<Root><Orders /><Order /><CustomerID>HANAR</CustomerID><EmployeeID>3</EmployeeID><OrderDate>1996-07-10T00:00:00</OrderDate><RequiredDate>1996-07-24T00:00:00</RequiredDate><product>1</product><Order /><CustomerID>CHOPS</CustomerID><EmployeeID>5</EmployeeID><OrderDate>1996-07-11T00:00:00</OrderDate><RequiredDate>1996-08-08T00:00:00</RequiredDate><product>2</product><Order /><CustomerID>RICSU</CustomerID><EmployeeID>9</EmployeeID><OrderDate>1996-07-12T00:00:00</OrderDate><RequiredDate>1996-08-09T00:00:00</RequiredDate><product>1</product><products /><product Id=\"1\" Value=\"300\" /><Product Id=\"2\" Value=\"910\" /></Root>", 
+            Assert.AreEqual("<Root><Orders /><Order /><CustomerID>HANAR</CustomerID><EmployeeID>3</EmployeeID><OrderDate>1996-07-10T00:00:00</OrderDate><RequiredDate>1996-07-24T00:00:00</RequiredDate><product>1</product><Order /><CustomerID>CHOPS</CustomerID><EmployeeID>5</EmployeeID><OrderDate>1996-07-11T00:00:00</OrderDate><RequiredDate>1996-08-08T00:00:00</RequiredDate><product>2</product><Order /><CustomerID>RICSU</CustomerID><EmployeeID>9</EmployeeID><OrderDate>1996-07-12T00:00:00</OrderDate><RequiredDate>1996-08-09T00:00:00</RequiredDate><product>1</product><products /><product Id=\"1\" Value=\"300\" /><product Id=\"2\" Value=\"910\" /></Root>", 
                 LinqToXml.GetFlattenString(doc));
         }
 
