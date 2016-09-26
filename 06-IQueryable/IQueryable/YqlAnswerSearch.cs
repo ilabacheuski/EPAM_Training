@@ -16,30 +16,33 @@ namespace IQueryableTask
     /// simple YQL query looks like SQL query:
     ///     select * from answers.search where query="Belarus" and type="resolved"
     /// </summary>
-    public class YqlAnswerSearch : IQueryable<Question>
+    //public class YqlAnswerSearch : IQueryable<Question>
+    public class YqlAnswerSearch : IOrderedQueryable<Question>
     {
+        #region Constructors
+        /// <summary> 
+        /// This constructor is called by the client to create the data source. 
+        /// </summary> 
         public YqlAnswerSearch()
         {
             Expression = Expression.Constant(this);
         }
 
+        /// <summary> 
+        /// This constructor is called by Provider.CreateQuery(). 
+        /// </summary> 
+        /// <param name="expression"></param>
         public YqlAnswerSearch(Expression expression)
         {
+            if (expression == null)
+            {
+                throw new ArgumentNullException("expression");
+            }
             Expression = expression;
         }
+        #endregion
 
-        public IEnumerator<Question> GetEnumerator()
-        {
-            // TODO: Implement GetEnumerator
-            throw new NotImplementedException();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            // TODO: Implement GetEnumerator
-            throw new NotImplementedException();
-        }
-
+        #region Properties
         public Expression Expression { get; private set; }
 
         public Type ElementType
@@ -47,16 +50,34 @@ namespace IQueryableTask
             get
             {
                 // TODO: Implement ElementType get
-                throw new NotImplementedException();
+                return typeof(Question);
             }
         }
 
         public IQueryProvider Provider { get { return new YqlAnswersQueryProvider(); } }
 
-		/// <summary>
-		/// Builds YQL query by an expression
-		/// </summary>
-		/// <returns>YQL query</returns>
+        #endregion
+
+        #region Enumerators
+        //public IEnumerator<Question> GetEnumerator()
+        public IEnumerator<Question> GetEnumerator()
+        {
+            // TODO: Implement GetEnumerator
+            return (Provider.Execute<IEnumerable<Question>>(Expression)).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            // TODO: Implement GetEnumerator
+            return (Provider.Execute<IEnumerable>(Expression)).GetEnumerator();
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Builds YQL query by an expression
+        /// </summary>
+        /// <returns>YQL query</returns>
         public override string ToString()
         {
             return ((YqlAnswersQueryProvider) Provider).GetYqlQuery(Expression);

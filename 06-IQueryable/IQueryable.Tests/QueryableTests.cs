@@ -27,11 +27,12 @@ namespace IQueryable.Tests
         [TestMethod]
         public void Where_Should_Filter_Results()
         {
-			var answers = from a in new YqlAnswerSearch()
-						  where a.Subject.Contains("Belarus")
-						  select a;
 
-			var answered = from a in new YqlAnswerSearch()
+            var answers = from a in new YqlAnswerSearch()
+                          where a.Subject.Contains("Belarus")
+                          select a;
+
+            var answered = from a in new YqlAnswerSearch()
 						   where a.Subject.Contains("Belarus") && a.Type == QuestionType.Resolved
 						   select a;
 
@@ -39,7 +40,7 @@ namespace IQueryable.Tests
 								  where a.Subject.Contains("Belarus") && a.Category == "Other - Europe"
 								  select a;
 
-			QueryTest(answers, "select * from answers.search where query=\"Belarus\"", "Where should query by Belarus");
+            QueryTest(answers, "select * from answers.search where query=\"Belarus\"", "Where should query by Belarus");
 
 			QueryTest(answered, new[] { "select * from answers.search where query=\"Belarus\" and type=\"resolved\"",
 			                            "select * from answers.search where type=\"resolved\" and query=\"Belarus\"" },
@@ -104,6 +105,20 @@ namespace IQueryable.Tests
             foreach (var answer in answers)
             {
                 Assert.IsTrue(answer.Subject.IndexOf("Belarus", StringComparison.InvariantCultureIgnoreCase) >= 0, 
+                            "Where should fetch proper data from Yql service");
+            }
+        }
+
+        [TestMethod]
+        public void Just_Select()
+        {
+            var answers = from a in new YqlAnswerSearch()
+                          where a.Category == ""
+                          select a;
+
+            foreach (var answer in answers)
+            {
+                Assert.IsTrue(answer.Subject.IndexOf("Belarus", StringComparison.InvariantCultureIgnoreCase) >= 0,
                             "Where should fetch proper data from Yql service");
             }
         }
