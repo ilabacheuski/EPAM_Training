@@ -146,8 +146,12 @@ namespace IOStreams
 		/// <returns>Unicoded file content</returns>
 		public static string ReadEncodedText(string fileName, string encoding)
 		{
-			// TODO : Implement ReadEncodedText method
-			throw new NotImplementedException();
+            // TODO : Implement ReadEncodedText method
+//            System.IO.StreamReader file = new System.IO.StreamReader(path, Program.TSSettings.MainEncoding);
+            using (StreamReader file = new StreamReader(fileName, Encoding.GetEncoding(encoding)))
+            {
+                return file.ReadToEnd();
+            }
 		}
 	}
 
