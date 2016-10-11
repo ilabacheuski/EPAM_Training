@@ -100,7 +100,7 @@ namespace IOStreams
                     return hex.Replace("-", "");
                 };
             }
-            catch (Exception e)
+            catch (Exception)
             {
 
                 throw new ArgumentException("Not supported algorithm name", "hashAlgorithmName");
