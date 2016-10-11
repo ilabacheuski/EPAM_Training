@@ -92,10 +92,19 @@ namespace IOStreams
 		public static string CalculateHash(this Stream stream, string hashAlgorithmName)
 		{
             // TODO : Implement CalculateHash method
+            try
+            {
+                using (HashAlgorithm hash = HashAlgorithm.Create(hashAlgorithmName))
+                {
+                    string hex = BitConverter.ToString(hash.ComputeHash(stream));
+                    return hex.Replace("-", "");
+                };
+            }
+            catch (Exception e)
+            {
 
-            var hash = stream.GetHashCode();
-
-			throw new NotImplementedException();
+                throw new ArgumentException("Not supported algorithm name", "hashAlgorithmName");
+            }
 		}
 
 
