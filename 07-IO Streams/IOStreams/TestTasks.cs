@@ -26,16 +26,61 @@ namespace IOStreams
 		/// <returns>sequence of PlanetInfo</returns>
 		public static IEnumerable<PlanetInfo> ReadPlanetInfoFromXlsx(string xlsxFileName)
 		{
-			// TODO : Implement ReadPlanetInfoFromXlsx method using System.IO.Packaging + Linq-2-Xml
+            // TODO : Implement ReadPlanetInfoFromXlsx method using System.IO.Packaging + Linq-2-Xml
 
-			// HINT : Please be as simple & clear as possible.
-			//        No complex and common use cases, just this specified file.
-			//        Required data are stored in Planets.xlsx archive in 2 files:
-			//         /xl/sharedStrings.xml      - dictionary of all string values
-			//         /xl/worksheets/sheet1.xml  - main worksheet
+            // HINT : Please be as simple & clear as possible.
+            //        No complex and common use cases, just this specified file.
+            //        Required data are stored in Planets.xlsx archive in 2 files:
+            //         /xl/sharedStrings.xml      - dictionary of all string values
+            //         /xl/worksheets/sheet1.xml  - main worksheet
 
-			throw new NotImplementedException();
-		}
+
+            // Don't use OpenXML just to make it harder.
+
+            //Uri baseUri = new Uri(xlsxFileName, UriKind.Relative);
+
+            List<PlanetInfo> result;
+
+            using (Package zipFile = ZipPackage.Open(xlsxFileName, FileMode.Open, FileAccess.Read))
+            {
+                Uri partUriSheet1 = new Uri(@"/xl/worksheets/sheet1.xml", UriKind.Relative);
+                Uri partUriDictionary = new Uri(@"/xl/sharedStrings.xml", UriKind.Relative);
+                PackagePart worksheetPart = zipFile.GetPart(partUriSheet1);
+                PackagePart stringDictionaryPart = zipFile.GetPart(partUriDictionary);
+                using (Stream sheetStream = worksheetPart.GetStream())
+                using (Stream dictionaryStream = stringDictionaryPart.GetStream())
+                {
+                    XDocument docSheet = XDocument.Load(sheetStream);
+                    var nsSheet = docSheet.Root.Name.Namespace;
+                    XDocument docDictionary = XDocument.Load(dictionaryStream);
+                    var nsDict = docDictionary.Root.Name.Namespace;
+
+                    var stringDictionary = docDictionary.Descendants(nsDict + "si")
+                        .Select(t => t.Element(nsDict + "t").Value).ToArray();
+
+                    if (stringDictionary.Length == 0)
+                    {
+                        throw new InvalidDataException();
+                    }
+
+                    var rawData = docSheet.Descendants(nsSheet + "row")
+                            .Where(x => (int)(x.Attribute("r")) > 1);
+                    // Assume we have columns only till AA. 
+                    //Is it valid to have R[1]C[1] reference style instead?
+
+                    result = rawData.Select(x => new PlanetInfo()
+                    {
+                        Name = stringDictionary[(int)(x.Descendants(nsSheet + "v")
+                                .Where(t => t.Parent.Attribute("r").Value.StartsWith("A"))
+                                .FirstOrDefault())],
+                        MeanRadius = Convert.ToDouble(x.Descendants(nsSheet + "v")
+                                .Where(t => t.Parent.Attribute("r").Value.StartsWith("B"))
+                                .FirstOrDefault().Value)
+                    }).ToList();
+                }                    
+            }
+            return result;
+        }
 
 
 		/// <summary>
@@ -46,7 +91,10 @@ namespace IOStreams
 		/// <returns></returns>
 		public static string CalculateHash(this Stream stream, string hashAlgorithmName)
 		{
-			// TODO : Implement CalculateHash method
+            // TODO : Implement CalculateHash method
+
+            var hash = stream.GetHashCode();
+
 			throw new NotImplementedException();
 		}
 
