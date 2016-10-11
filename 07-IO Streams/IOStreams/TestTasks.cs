@@ -116,9 +116,26 @@ namespace IOStreams
 		/// <returns>output stream</returns>
 		public static Stream DecompressStream(string fileName, DecompressionMethods method)
 		{
-			// TODO : Implement DecompressStream method
-			throw new NotImplementedException();
-		}
+            // TODO : Implement DecompressStream method
+
+            FileStream originalFileStream = File.OpenRead(fileName);
+            Stream decompressedStream;
+
+            switch (method)
+            {
+                case DecompressionMethods.GZip:
+                    decompressedStream = new GZipStream(originalFileStream, CompressionMode.Decompress);
+                    break;
+                case DecompressionMethods.Deflate:
+                    decompressedStream = new DeflateStream(originalFileStream, CompressionMode.Decompress);
+                    break;
+                case DecompressionMethods.None:
+                default:
+                    decompressedStream = originalFileStream;
+                    break;
+            }
+            return decompressedStream;
+        }
 
 
 		/// <summary>
